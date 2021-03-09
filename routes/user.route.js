@@ -1,5 +1,5 @@
 import Router from 'express-promise-router';
-import controllers from '../controllers/index';
+import controllers from '../controllers';
 
 const router = Router();
 router.post('/add', controllers.User.add);
