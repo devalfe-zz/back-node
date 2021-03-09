@@ -4,14 +4,14 @@ require('dotenv').config();
 
 const options = {
   useNewUrlParser: true,
-  useUnifiedTopology: true
-  // useCreateIndex: true,
-  // useFindAndModify: false,
-  // autoIndex: false,
-  // poolSize: 10,
-  // serverSelectionTimeoutMS: 5000,
-  // socketTimeoutMS: 45000,
-  // family: 4
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  autoIndex: false,
+  poolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  family: 4
 };
 const dbConnection = express();
 const db = process.env.DB_CONN;

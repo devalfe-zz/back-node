@@ -13,6 +13,7 @@ module.exports = {
   ],
 
   plugins: ['eslint-plugin-import'],
+  parser: 'babel-eslint',
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 6
@@ -75,7 +76,7 @@ module.exports = {
     'no-unused-labels': 'error',
 
     'prefer-const': 'error',
-    'radix': 'error',
+    radix: 'error',
     'spaced-comment': [
       'error',
       'always',

@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import path from 'path';
 import dbConnection from './database/config';
+import routes from './routes/index';
 
 const publicDir = path.join(__dirname, 'public');
 const restFul = require('express-method-override')('_method');
@@ -24,7 +25,7 @@ app
   .use(morgan('dev'))
   .use(cors())
   .use(restFul)
-  .use(dbConnection);
-//   .use('/api', routes);
+  .use(dbConnection)
+  .use('/api', routes);
 
 export default app;
