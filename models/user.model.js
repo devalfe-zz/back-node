@@ -11,6 +11,10 @@ const userSchema = Schema({
     required: true,
     maxlength: 255,
     unique: true
+    // validate: {
+    //   validator: () => Promise.resolve(false),
+    //   message: 'Email validation failed'
+    // }
   },
   password: {
     type: String,
@@ -34,6 +38,12 @@ const userSchema = Schema({
     default: 1
   },
   createdAt: { type: Date, default: Date.now }
+});
+
+userSchema.method('toJSON', function() {
+  const { __v, _id, ...object } = this.toObject();
+  object.uid = _id;
+  return object;
 });
 
 const User = mongoose.model('user', userSchema);

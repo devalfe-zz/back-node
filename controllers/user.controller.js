@@ -6,6 +6,12 @@ export default {
   add: async (req, res, next) => {
     try {
       req.body.password = await bcrypt.hash(req.body.password, 10);
+      const reg0 = await models.User.findOne({ email: req.body.email });
+      if (reg0) {
+        return res.status(400).send({
+          message: 'Email duplicado'
+        });
+      }
       const reg = await models.User.create(req.body);
       res.status(200).json(reg);
     } catch (e) {
@@ -38,12 +44,12 @@ export default {
   update: async (req, res, next) => {
     try {
       const pas = req.body.password;
-      const reg0 = await models.User.findOne({ _id: req.body._id });
+      const reg0 = await models.User.findOne({ uid: req.body.uid });
       if (pas != reg0.password) {
         req.body.password = await bcrypt.hash(req.body.password, 10);
       }
       const reg = await models.User.findByIdAndUpdate(
-        { _id: req.body._id },
+        { uid: req.body.uid },
         {
           role: req.body.role,
           name: req.body.name,
@@ -61,7 +67,7 @@ export default {
   },
   remove: async (req, res, next) => {
     try {
-      const reg = await models.User.findByIdAndDelete({ _id: req.body._id });
+      const reg = await models.User.findByIdAndDelete({ uid: req.body.uid });
       res.status(200).json(reg);
     } catch (e) {
       res.status(500).send({
@@ -72,7 +78,7 @@ export default {
   },
   query: async (req, res, next) => {
     try {
-      const reg = await models.User.findOne({ _id: req.query._id });
+      const reg = await models.User.findOne({ uid: req.query.uid });
       if (!reg) {
         res.status(404).send({
           message: 'El registro no existe'
@@ -90,7 +96,7 @@ export default {
   activate: async (req, res, next) => {
     try {
       const reg = await models.User.findByIdAndUpdate(
-        { _id: req.body._id },
+        { uid: req.body.uid },
         { state: 1 }
       );
       res.status(200).json(reg);
@@ -104,7 +110,7 @@ export default {
   deactivate: async (req, res, next) => {
     try {
       const reg = await models.User.findByIdAndUpdate(
-        { _id: req.body._id },
+        { uid: req.body.uid },
         { state: 0 }
       );
       res.status(200).json(reg);
@@ -124,7 +130,7 @@ export default {
       if (user) {
         const match = await bcrypt.compare(req.body.password, user.password);
         if (match) {
-          const tokenReturn = await token.encode(user._id);
+          const tokenReturn = await token.encode(user.uid);
           res.status(200).json({ user, tokenReturn });
         } else {
           res.status(404).send({

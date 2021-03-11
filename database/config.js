@@ -7,7 +7,7 @@ const options = {
   useUnifiedTopology: true,
   useCreateIndex: true,
   useFindAndModify: false,
-  autoIndex: false,
+  autoIndex: true,
   poolSize: 10,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,

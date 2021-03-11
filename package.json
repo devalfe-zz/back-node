@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "supervisor server.js",
     "dev": "nodemon server.js --exec babel-node",
-    "lint": "eslint --color -c .eslintrc.js --ext .js .",
-    "format:write": "prettier **/**/*.{ts,tsx,js,jsx,json,md,css,scss,html} --write"
+    "lint": "eslint --color -c .eslintrc --ext .js .",
+    "format:write": "prettier **/**/*.{ts,tsx,js,jsx,json,md,css,scss,html} --write",
+    "pretty-quick": "pretty-quick"
   },
   "keywords": [],
   "author": "Devalfe",
@@ -24,6 +25,7 @@
       "@commitlint/config-conventional"
     ]
   },
+  "private": true,
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -35,6 +37,7 @@
     "express": "^4.17.1",
     "express-method-override": "0.0.3",
     "express-promise-router": "^4.0.1",
+    "express-validator": "^6.10.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "mongoose": "^5.11.15",
