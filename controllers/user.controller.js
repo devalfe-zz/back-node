@@ -9,7 +9,7 @@ export default {
       const reg0 = await models.User.findOne({ email: req.body.email });
       if (reg0) {
         return res.status(400).send({
-          message: 'Email duplicado'
+          message: 'Email ya se encuentra registrado'
         });
       }
       const reg = await models.User.create(req.body);
