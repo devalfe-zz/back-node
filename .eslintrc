@@ -20,7 +20,6 @@
   },
   "rules": {
     "no-var": "warn",
-    "prettier/prettier": "warn",
     "arrow-body-style": "error",
     "constructor-super": "error",
     "guard-for-in": "error",
@@ -84,6 +83,12 @@
         "markers": ["/"]
       }
     ],
-    "indent": "off"
+    "indent": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   }
 }

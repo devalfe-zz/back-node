@@ -41,6 +41,7 @@ const userSchema = Schema({
 });
 
 userSchema.method('toJSON', function() {
+  // eslint-disable-next-line no-unused-vars
   const { __v, _id, ...object } = this.toObject();
   object.uid = _id;
   return object;
