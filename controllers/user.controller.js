@@ -1,25 +1,63 @@
 import models from '../models';
 import bcrypt from 'bcryptjs';
 import token from '../services/token';
+import formidable from 'formidable';
 
 export default {
   add: async (req, res, next) => {
-    try {
-      req.body.password = await bcrypt.hash(req.body.password, 10);
-      const reg0 = await models.User.findOne({ email: req.body.email });
-      if (reg0) {
-        return res.status(400).send({
-          message: 'Email ya se encuentra registrado'
+    const form = new formidable.IncomingForm();
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        res.send({
+          status: 0,
+          type: 'FORM_DATA_ERROR',
+          message: 'Error de información del formulario'
         });
+        return;
       }
-      const reg = await models.User.create(req.body);
-      res.status(200).json(reg);
-    } catch (e) {
-      res.status(500).send({
-        message: 'Ocurrió un error'
-      });
-      next(e);
-    }
+      const { name, password, email } = fields;
+      try {
+        if (!name) {
+          throw new Error('El nombre es requerido');
+        } else if (!password) {
+          throw new Error('El password es requerido');
+        } else if (!email) {
+          throw new Error('El email es requerido');
+        }
+      } catch (error) {
+        res.send({
+          status: 0,
+          type: 'GET_ERROR_PARAM',
+          message: error.message
+        });
+        return;
+      }
+      try {
+        const cryPassword = await bcrypt.hash(password, 10);
+        const exists = await models.User.findOne({ email: email });
+        if (exists) {
+          return res.send({
+            status: 0,
+            type: 'EMAIL_HAS_EXIST',
+            message: 'Email ya se encuentra registrado'
+          });
+        }
+        const newUser = {
+          name,
+          password: cryPassword,
+          email
+        };
+        const reg = await models.User.create(newUser);
+        res.status(200).json(reg);
+      } catch (e) {
+        res.status(500).send({
+          status: 0,
+          type: 'USER_ADD_FAILED',
+          message: e.message
+        });
+        next(e);
+      }
+    });
   },
   list: async (req, res, next) => {
     try {

@@ -5,19 +5,19 @@ import Middleware from '../middleware';
 const router = Router();
 router.post(
   '/add',
-  [
-    check('name', 'El nombre es requerido')
-      .not()
-      .isEmpty(),
-    check('password', 'El password es requerido')
-      .not()
-      .isEmpty(),
-    check('email', 'El email es requerido')
-      .not()
-      .isEmpty(),
-    check('email', 'El email no es valido').isEmail(),
-    Middleware.Validate.validateResult
-  ],
+  // [
+  //   check('name', 'El nombre es requerido')
+  //     .not()
+  //     .isEmpty(),
+  //   check('password', 'El password es requerido')
+  //     .not()
+  //     .isEmpty(),
+  //   check('email', 'El email es requerido')
+  //     .not()
+  //     .isEmpty(),
+  //   check('email', 'El email no es valido').isEmail(),
+  //   Middleware.Validate.validateResult
+  // ],
   Controllers.User.add
 );
 router.get('/list', Controllers.User.list);
