@@ -33,7 +33,8 @@ export default {
         return;
       }
       try {
-        const cryPassword = await bcrypt.hash(password, 10);
+        const salt = bcrypt.genSaltSync();
+        const cryPassword = bcrypt.hashSync(password, salt);
         const exists = await models.User.findOne({ email: email });
         if (exists) {
           return res.send({
@@ -80,28 +81,67 @@ export default {
     }
   },
   update: async (req, res, next) => {
-    try {
-      const pas = req.body.password;
-      const reg0 = await models.User.findOne({ uid: req.body.uid });
-      if (pas != reg0.password) {
-        req.body.password = await bcrypt.hash(req.body.password, 10);
-      }
-      const reg = await models.User.findByIdAndUpdate(
-        { uid: req.body.uid },
-        {
-          role: req.body.role,
-          name: req.body.name,
-          email: req.body.email,
-          password: req.body.password
-        }
-      );
-      res.status(200).json(reg);
-    } catch (e) {
-      res.status(500).send({
-        message: 'Ocurrió un error'
+    const uid = req.params.uid;
+
+    if (!uid) {
+      res.send({
+        status: 0,
+        type: 'ERROR_USERID',
+        message: 'user_id error de parámetro'
       });
-      next(e);
+      return;
     }
+    const form = new formidable.IncomingForm();
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        res.send({
+          status: 0,
+          type: 'FORM_ERROR',
+          message: 'Error de información del formulario'
+        });
+        return;
+      }
+
+      const { name, password, email, state, role } = fields;
+      try {
+        if (!name) {
+          throw new Error('El nombre es requerido');
+        } else if (!password) {
+          throw new Error('El password es requerido');
+        } else if (!email) {
+          throw new Error('El email es requerido');
+        } else if (!state) {
+          throw new Error('El state es requerido');
+        } else if (!role) {
+          throw new Error('El role es requerido');
+        }
+        const inPassword = fields.password;
+        const exists = await models.User.findById({ _id: uid });
+        if (inPassword != exists.password) {
+          const salt = bcrypt.genSaltSync();
+          fields.password = bcrypt.hashSync(password, salt);
+        }
+        const newData = { name, password, email, state, role };
+
+        await models.User.findByIdAndUpdate(
+          { _id: uid },
+          {
+            $set: newData
+          }
+        );
+        res.send({
+          status: 1,
+          success: 'Se logró modificar la información'
+        });
+      } catch (e) {
+        res.send({
+          status: 0,
+          type: 'ERROR_UPDATE_USER',
+          message: e.message
+        });
+        next(e);
+      }
+    });
   },
   remove: async (req, res, next) => {
     try {

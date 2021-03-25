@@ -12,7 +12,7 @@ async function checkToken(token) {
   const user = await models.User.findOne({ _id: __id, state: 1 });
   if (user) {
     // eslint-disable-next-line no-shadow
-    const token = jwt.sign({ _id: __id }, 'clavesecretaparagenerartoken', {
+    const token = jwt.sign({ _id: __id }, process.env.JWT_SECRET, {
       expiresIn: '1d'
     });
     return { token, role: user.role };
@@ -23,14 +23,14 @@ async function checkToken(token) {
 
 export default {
   encode: async _id => {
-    const token = jwt.sign({ _id: _id }, 'clavesecretaparagenerartoken', {
-      expiresIn: '1d'
+    const token = jwt.sign({ _id: _id }, process.env.JWT_SECRET, {
+      expiresIn: '3h'
     });
     return token;
   },
   decode: async token => {
     try {
-      const { _id } = await jwt.verify(token, 'clavesecretaparagenerartoken');
+      const { _id } = await jwt.verify(token, process.env.JWT_SECRET);
       const user = await models.User.findOne({ _id, state: 1 });
       if (user) {
         return user;
