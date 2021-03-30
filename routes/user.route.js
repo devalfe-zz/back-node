@@ -13,7 +13,7 @@ router.post(
 );
 router.get('/list', Controllers.User.list);
 router.put('/update/:uid', Controllers.User.update);
-router.delete('/remove', Controllers.User.remove);
+router.delete('/remove/:uid', Controllers.User.remove);
 router.get('/query', Controllers.User.query);
 router.put('/activate', Controllers.User.activate);
 router.put('/deactivate', Controllers.User.deactivate);

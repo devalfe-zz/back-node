@@ -82,7 +82,6 @@ export default {
   },
   update: async (req, res, next) => {
     const uid = req.params.uid;
-
     if (!uid) {
       res.send({
         status: 0,
@@ -144,19 +143,35 @@ export default {
     });
   },
   remove: async (req, res, next) => {
+    const uid = req.params.uid;
+    const exists = await models.User.findOne({ _id: uid });
+    console.log(uid);
+    if (!uid || !exists) {
+      return res.send({
+        status: 0,
+        type: 'ERROR_USERID',
+        message: 'user_id error de parámetro'
+      });
+    }
     try {
-      const reg = await models.User.findByIdAndDelete({ uid: req.body.uid });
-      res.status(200).json(reg);
+      await models.User.findByIdAndDelete({ _id: uid });
+      // res.status(200).json(reg);
+      res.send({
+        status: 1,
+        success: 'Se logró Eliminar con éxito'
+      });
     } catch (e) {
-      res.status(500).send({
-        message: 'Ocurrió un error'
+      res.send({
+        status: 0,
+        type: 'ERROR_DELETE_USER',
+        message: e.message
       });
       next(e);
     }
   },
   query: async (req, res, next) => {
     try {
-      const reg = await models.User.findOne({ uid: req.query.uid });
+      const reg = await models.User.findOne({ _id: req.query.uid });
       if (!reg) {
         res.status(404).send({
           message: 'El registro no existe'
@@ -174,7 +189,7 @@ export default {
   activate: async (req, res, next) => {
     try {
       const reg = await models.User.findByIdAndUpdate(
-        { uid: req.body.uid },
+        { _id: req.body.uid },
         { state: 1 }
       );
       res.status(200).json(reg);
@@ -188,7 +203,7 @@ export default {
   deactivate: async (req, res, next) => {
     try {
       const reg = await models.User.findByIdAndUpdate(
-        { uid: req.body.uid },
+        { _id: req.body.uid },
         { state: 0 }
       );
       res.status(200).json(reg);
