@@ -1,7 +1,5 @@
 import Router from 'express-promise-router';
 import Controllers from '../controllers';
-import { check } from 'express-validator';
-import Middleware from '../middleware';
 const router = Router();
 router.post(
   '/add',
@@ -17,6 +15,5 @@ router.delete('/remove/:uid', Controllers.User.remove);
 router.get('/query', Controllers.User.query);
 router.put('/activate', Controllers.User.activate);
 router.put('/deactivate', Controllers.User.deactivate);
-router.post('/login', Controllers.User.login);
 
 export default router;
