@@ -11,7 +11,6 @@ async function checkToken(token) {
   }
   const user = await models.User.findOne({ _id: __id, state: 1 });
   if (user) {
-    // eslint-disable-next-line no-shadow
     const token = jwt.sign({ _id: __id }, process.env.JWT_SECRET, {
       expiresIn: '1d'
     });

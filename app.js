@@ -3,13 +3,16 @@ import { json, urlencoded } from 'body-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import path from 'path';
-import dbConnection from './database/config';
+import db from './database/db';
+
 import routes from './routes/index';
+import session from 'express-session';
+import connectMongo from 'connect-mongo';
+// import cookieParser from 'cookie-parser';
+import config from 'config-lite';
 
 const publicDir = path.join(__dirname, 'public');
 const restFul = require('express-method-override')('_method');
-
-const port = process.env.PORT || 3000;
 
 const app = express();
 app.all('*', (req, res, next) => {
@@ -30,8 +33,25 @@ app.all('*', (req, res, next) => {
   }
 });
 
+// const MongoStore = connectMongo(session);
+
 app
-  .set('port', port)
+  // .set('port', port)
+  // .use(cookieParser)
+
+  // .use(
+  //   session({
+  //     name: config.session.name,
+  //     secret: config.session.secret,
+  //     resave: true,
+  //     saveUninitialized: false,
+  //     cookie: config.session.cookie
+  //     // store: new MongoStore({
+  //     //   autoReconnect: true,
+  //     //   url: config.url
+  //     // })
+  //   })
+  // )
   .use(json())
   .use(
     urlencoded({
@@ -42,7 +62,7 @@ app
   .use(morgan('dev'))
   .use(cors())
   .use(restFul)
-  .use(dbConnection)
+  // .use(db)
   .use('/api', routes);
 
 export default app;

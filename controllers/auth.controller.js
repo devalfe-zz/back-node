@@ -22,7 +22,7 @@ export default {
         if (!email) {
           throw new Error('El email es requerido');
         } else if (!password) {
-          throw new Error('Error de parámetro de contraseña');
+          throw new Error('El password es requerido');
         }
       } catch (e) {
         // console.log(err.message, err);
@@ -39,23 +39,26 @@ export default {
           state: 1
         });
         if (exists) {
-          const match = await bcrypt.compare(password, exists.password);
+          const match = bcrypt.compareSync(password, exists.password);
           if (match) {
             const tokenReturn = await token.encode(exists._id);
             res.status(200).json({ exists, tokenReturn });
           } else {
             res.status(404).send({
+              status: 0,
               message: 'Password Incorrecto'
             });
           }
         } else {
           res.status(404).send({
+            status: 0,
             message: 'No existe el User'
           });
         }
       } catch (e) {
         res.status(500).send({
-          message: 'Ocurrió un error'
+          status: 0,
+          message: e.message
         });
         next(e);
       }

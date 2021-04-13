@@ -5,7 +5,7 @@
   "singleQuote": true,
   "trailingComma": "none",
   "semi": true,
-  "endOfLine": "lf",
+  "endOfLine": "crlf",
   "jsxSingleQuote": true,
   "arrowParens": "avoid"
 }
