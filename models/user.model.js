@@ -10,7 +10,9 @@ const userSchema = Schema({
     type: String,
     required: true,
     maxlength: 255,
-    unique: true
+    unique: true,
+    lowercase: true
+
     // validate: {
     //   validator: () => Promise.resolve(false),
     //   message: 'Email validation failed'
