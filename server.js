@@ -1,5 +1,6 @@
 import app from './app';
 import config from 'config-lite';
+const chalk = require('chalk');
 
 require('babel-core/register');
 
@@ -7,6 +8,8 @@ require('babel-core/register');
 // const server =
 app.listen(config.port, () =>
   console.log(
-    `Iniciando API REST con Express y MongoDB en el puerto ${config.port}`
+    chalk.cyan(
+      `Iniciando API REST con Express y MongoDB en el puerto ${config.port}`
+    )
   )
 );

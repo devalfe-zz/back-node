@@ -11,7 +11,7 @@ async function checkToken(token) {
   }
   const user = await models.User.findOne({ _id: __id, state: 1 });
   if (user) {
-    const token = jwt.sign({ _id: __id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ _id: __id }, process.env.SECRETORPRIVATEKEY, {
       expiresIn: '1d'
     });
     return { token, role: user.role };
@@ -22,14 +22,14 @@ async function checkToken(token) {
 
 export default {
   encode: async _id => {
-    const token = jwt.sign({ _id: _id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ _id: _id }, process.env.SECRETORPRIVATEKEY, {
       expiresIn: '3h'
     });
     return token;
   },
   decode: async token => {
     try {
-      const { _id } = await jwt.verify(token, process.env.JWT_SECRET);
+      const { _id } = await jwt.verify(token, process.env.SECRETORPRIVATEKEY);
       const user = await models.User.findOne({ _id, state: 1 });
       if (user) {
         return user;

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import express from 'express';
 require('dotenv').config();
 import config from 'config-lite';
+const chalk = require('chalk');
 
 const options = {
   useNewUrlParser: true,
@@ -19,25 +19,26 @@ const options = {
 
 mongoose.connect(config.url, options);
 mongoose.Promise = global.Promise;
-
 const dbConnection = mongoose.connection;
 
 // .then(() => console.log(`Conexión con MongoDB es OK!`))
 // .catch(err => console.log(err));
 
 dbConnection.once('open', () => {
-  console.log('Conectado con éxito a la base de datos');
+  console.log(chalk.cyan('Conectado con éxito a la base de datos'));
 });
 
 dbConnection.on('error', function(error) {
-  console.error('Error en la conexión de MongoDb: ' + error);
+  console.error(chalk.red('Error en la conexión de MongoDb: ' + error));
   mongoose.disconnect();
 });
 
 dbConnection.on('close', function() {
   console.log(
-    'La base de datos está desconectada, vuelva a conectarse a la base de datos'
+    chalk.redBright(
+      'La base de datos está desconectada, vuelva a conectarse a la base de datos'
+    )
   );
-  mongoose.connect(config.url, { server: { auto_reconnect: true } });
+  mongoose.connect(config.url, options);
 });
 export default dbConnection;
