@@ -4,8 +4,6 @@ const chalk = require('chalk');
 
 require('babel-core/register');
 
-// eslint-disable-next-line no-unused-vars
-// const server =
 app.listen(config.port, () =>
   console.log(
     chalk.cyan(

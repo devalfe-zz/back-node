@@ -118,20 +118,19 @@ export default {
         const exists = await models.User.findById({ _id: uid });
         if (inPassword != exists.password) {
           const salt = bcrypt.genSaltSync();
-          fields.password = bcrypt.hashSync(password, salt);
+          const newPassword = bcrypt.hashSync(password, salt);
+          const newData = { name, password: newPassword, email, state, role };
+          await models.User.findByIdAndUpdate(
+            { _id: uid },
+            {
+              $set: newData
+            }
+          );
+          res.send({
+            status: 1,
+            success: 'Se logró modificar la información'
+          });
         }
-        const newData = { name, password, email, state, role };
-
-        await models.User.findByIdAndUpdate(
-          { _id: uid },
-          {
-            $set: newData
-          }
-        );
-        res.send({
-          status: 1,
-          success: 'Se logró modificar la información'
-        });
       } catch (e) {
         res.send({
           status: 0,
